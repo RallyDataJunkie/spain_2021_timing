@@ -24,6 +24,13 @@ caption = paste0(stage_info_$code, ' split delta (s) — ', driverCode, ' — ',
 
 
 ```{r srt-{{result_group}}-{{stage_code}}-{{driverCodeClean}}, cache=TRUE}
+# What is the color sence for the delta chartables
+color_flip = FALSE
+color_sense = c("green",'white',"red")
+
+if (color_flip)
+  color_sense = rev(color_sense)
+
 # TO DO - with all_vars(! is.na(.)), if there is an NA we lose the column?
 # CHECK
 wide_splits_rebased = driver_rebased[,c('code',split_names)] %>%
@@ -31,10 +38,14 @@ wide_splits_rebased = driver_rebased[,c('code',split_names)] %>%
                                     any_vars(! is.na(.)))  
 
 # This errors if there is an NA? TO DO - black highlight?
-wide_splits_rebased %>% 
+if (color_flip)
+  wide_splits_rebased = wide_splits_rebased %>% 
           #replace(is.na(.), 1e-9) %>%
+          mutate_if(is.numeric, funs(. * -1))
+
+wide_splits_rebased %>%
             formattable(align='c',
-                    list(area(col = 2:split_N_col_idx) ~ color_tile2(c("green",'white',"red")),
+                    list(area(col = 2:split_N_col_idx) ~ color_tile2(color_sense),
                  entryId=FALSE), caption=caption )
 #stop("TO HERE")
 ```
@@ -90,13 +101,20 @@ driver_rebased = rebase(full_durations_wide, driverCode,
 split_N_col_idx = which(colnames(driver_rebased) == 'split_N')[[1]]
 
 caption = paste0(stage_info_$code, ' split section delta (s) — ', driverCode, ' - ', rally_name)
-driver_rebased[,c('code',split_names)] %>%
+tmp_output_ = driver_rebased[,c('code',split_names)] %>%
                   filter_at(vars(starts_with("split_")),
                                 any_vars(! is.na(.)))  %>%
   # Limit the decimal places displayed if we have near zero floating values
-  mutate_if(is.numeric, round, digits = 1)  %>%
-formattable( align='c',
-            list(area(col = 2:split_N_col_idx) ~ color_tile2(c("green",'white',"red")),
+  mutate_if(is.numeric, round, digits = 1)
+
+if (color_flip)
+  tmp_output_ = tmp_output_ %>%
+      # Change the numeric sense
+      mutate_if(is.numeric, funs(. * -1))
+
+tmp_output_ %>%
+    formattable( align='c',
+            list(area(col = 2:split_N_col_idx) ~ color_tile2(color_sense),
                  entryId=FALSE), caption=caption)
 ```
 
@@ -116,10 +134,15 @@ caption = paste0(stage_info_$code, ' split section pace delta (s/km) — ', driv
 driver_rebased_split_wide = driver_rebased[,c('code',split_names)] %>%
                   filter_at(vars(starts_with("split_")),
                                 any_vars(! is.na(.)))  
-driver_rebased_split_wide %>%
+
+if (color_flip)
+  driver_rebased_split_wide = driver_rebased_split_wide %>%
             #replace(is.na(.), 1e-9) %>%
+            mutate_if(is.numeric, funs(. * -1))
+
+driver_rebased_split_wide %>%
             formattable(align='c',
-                    list(area(col = 2:split_N_col_idx) ~ color_tile2(c("green",'white',"red")),
+                    list(area(col = 2:split_N_col_idx) ~ color_tile2(color_sense),
                  entryId=FALSE), caption=caption )
 ```
 
