@@ -66,4 +66,26 @@ Leave driver_template 24015
 Enter driver_template 24048
 Leave driver_template 24048
 Leave stage_result_template SS2
+Enter stage_result_template SS3
+test-template IN:  SS3
+test-template OUT:  SS3
+Enter driver_template 24005
+Leave driver_template 24005
+Enter driver_template 24006
+Leave driver_template 24006
+Enter driver_template 24007
+Leave driver_template 24007
+Enter driver_template 24008
+Leave driver_template 24008
+Enter driver_template 24009
+Leave driver_template 24009
+Enter driver_template 24011
+Leave driver_template 24011
+Enter driver_template 24012
+Leave driver_template 24012
+Enter driver_template 24013
+Leave driver_template 24013
+Enter driver_template 24015
+Leave driver_template 24015
+Leave stage_result_template SS3
 Finished build
