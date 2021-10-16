@@ -26,7 +26,7 @@ coldiffs = function(df, cols, dropfirst=FALSE, firstcol=NULL){
   # The split time to the first split is simply the first split time
   df_[cols[1]] = df[cols[1]]
   # Return the dataframe in a sensible column order
-  df_ = df_ %>% select(cols)
+  df_ = df_ %>% select(all_of(cols))
   
   if (!is.null(firstcol))
     df_[, cols[1]] = firstcol

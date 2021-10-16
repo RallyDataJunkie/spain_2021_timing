@@ -307,7 +307,7 @@ get_multi_stage_generic_wide = function(multi_stage_generic, stage_list,
     group_by_at(group_key) %>%
     tidyr::spread(key = spread_key,
                   value = wide_val) %>%
-    select( c(group_key, as.character(stage_list))) %>%
+    select( c(all_of(group_key), as.character(stage_list))) %>%
     # If we don't cast, it's a
     # non-rankable rowwise df
     as.data.frame()
@@ -417,7 +417,7 @@ rebase = function(df, id, rebase_cols,
   if (base_id)
     cols = c(id_col, cols)
   if (base)
-    df_ %>% select(cols)
+    df_ %>% select(all_of(cols))
   else
     df_
 }
