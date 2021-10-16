@@ -151,7 +151,7 @@ overall_long_gap_top10 <- multi_overall_wide_gap_top10 %>%
                             mutate_at(2:ncol(multi_overall_wide_gap_top10),
                                       list(~ . + abs(min(., na.rm=TRUE)))) %>% 
                             gather(key ="Stage",
-                            value ="Gap", stage_codes) %>%
+                            value ="Gap", all_of(stage_codes)) %>%
                                 group_by(code) %>%
                                 summarize(spk_ = spk_chr(-Gap,
                                                          type ="bar")) %>%

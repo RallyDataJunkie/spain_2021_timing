@@ -1,6 +1,6 @@
 generate_spark_bar = function(df, col, typ='Gap'){
   df %>% gather(key ="Stage",
-                value =!!typ, stage_codes) %>%
+                value =!!typ, all_of(stage_codes)) %>%
     group_by(code) %>%
     summarize(spk_ = spk_chr(-!!as.symbol(typ), type ="bar"))
 }
