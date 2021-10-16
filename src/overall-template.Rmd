@@ -104,7 +104,8 @@ multi_stage_wide_pos = multi_stage_times %>%
 out_table = multi_overall_wide_pos %>%
                               map_stage_codes(stage_list_codes) %>%
                               map_driver_names(cars) %>% 
-              dplyr::arrange(!!as.symbol(stage_codes[length(stage_codes)]))  %>% head(10)
+              dplyr::arrange(!!as.symbol(stage_codes[length(stage_codes)]))  %>%
+              select(-entryId) %>% head(10)
 ```
 
 
@@ -437,7 +438,8 @@ if (length(penalties)>0) {
     map_controlId(controls) %>%
     mutate('penaltyDurationS' = penaltyDurationMs/1000 ) %>%
       # Limit columns and set column order
-      select(-c(controlId, penaltyDurationMs, penaltyDurationMs, penaltyId)) %>%
+      select(-c(controlId, penaltyDurationMs, penaltyDurationMs,
+                penaltyId, entryId)) %>%
       # Move last column to first
       select(code, control, location, type, reason, 'penaltyDurationS')
   
@@ -457,7 +459,7 @@ if (length(retirements>0)) {
   filter(entryId %in% wrc_entries)  %>% map_driver_names(cars) %>%
   map_controlId(controls) %>% 
   rename(time=retirementDateTime) %>%
-  select(-c(controlId, retirementId, retirementDateTimeLocal)) %>%
+  select(-c(controlId, retirementId, retirementDateTimeLocal, entryId)) %>%
   relocate(reason, .after = last_col()) %>%
   formattable(caption=paste("Retirements", rally_name, sep=", "))
 }
@@ -486,7 +488,9 @@ Summary of raw stage times
 
 ```{r}
 #kable(multi_stage_times_wide)
-kable(multi_stage_times_wide %>% dplyr::arrange(factor(code, levels = overall_order)), format = "html")  %>%
+kable(multi_stage_times_wide %>%
+        dplyr::arrange(factor(code, levels = overall_order)) %>%
+        select(-entryId), format = "html")  %>%
   kable_styling() %>%
   kableExtra::scroll_box(width = "100%")
 ```
@@ -497,7 +501,9 @@ Summary of stage time deltas (*gap* to stage winner in seconds):
 
 ```{r}
 #kable(multi_stage_times_wide)
-multi_stage_win_gap_ordered = multi_stage_wide_gap %>% dplyr::arrange(factor(code, levels = overall_order))
+multi_stage_win_gap_ordered = multi_stage_wide_gap %>%
+        dplyr::arrange(factor(code, levels = overall_order))  %>%
+        select(-entryId)
 
 kable(multi_stage_win_gap_ordered, format = "html")  %>%
   kable_styling() %>%
