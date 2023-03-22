@@ -21,16 +21,17 @@ save_data = function(df, fn, eventkey, dirpath = "results_data/") {
 ```{r}
 season = get_active_season() %>% select(-eventDays) %>%
           mutate(eventkey=id) %>% select(eventkey, everything())
-
-eventId = get_eventId_from_name(season, 'acropolis')
-eventId = get_eventId_from_name(season, 'ypres')
 save_data(season, "season.csv", NULL)
 
-
+season
 ```
 
 ```{bash}
 sqlite-utils insert --replace test.db season --csv results_data/season.csv --pk=eventkey
+```
+
+```{r}
+eventId = get_eventId_from_name(season, 'monza')
 ```
 
 ```{r}
@@ -76,8 +77,9 @@ sqlite-utils insert --replace test.db stages --csv results_data/stages.csv --pk=
 
 ```{r}
 # Overall results
-stage_codes =  unlist(stage_list)
-stage_list_codes = stages[stages$code %in% stage_codes, 'stageId']
+#stage_codes =  unlist(stage_list)
+#stage_list_codes = stages[stages$code %in% stage_codes, 'stageId']
+stage_list_codes = stage_info$stageId
 
 multi_overall_results = get_multi_overall(stage_list_codes) %>%
                             mutate(diffFirstS = diffFirstMs/1000,
